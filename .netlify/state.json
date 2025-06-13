@@ -1,0 +1,20 @@
+{
+	"geolocation": {
+		"data": {
+			"city": "João Pessoa",
+			"country": {
+				"code": "BR",
+				"name": "Brazil"
+			},
+			"subdivision": {
+				"code": "PB",
+				"name": "Paraíba"
+			},
+			"timezone": "America/Fortaleza",
+			"latitude": -7.114,
+			"longitude": -34.8605,
+			"postalCode": "58000"
+		},
+		"timestamp": 1749778992624
+	}
+}

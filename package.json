@@ -1,0 +1,23 @@
+{
+  "name": "webhook",
+  "version": "1.0.0",
+  "description": "Webhook that logs requests and responds with current datetime",
+  "main": "functions/api.js",
+  "scripts": {
+    "start": "netlify dev",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": [
+    "webhook",
+    "netlify",
+    "serverless"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "morgan": "^1.10.0",
+    "serverless-http": "^3.2.0"
+  }
+}
