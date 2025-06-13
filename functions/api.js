@@ -5,6 +5,9 @@ const fs = require('fs');
 const path = require('path');
 const serverless = require('serverless-http');
 
+// Importando o arquivo de versão
+const versionFile = require('../version.json');
+
 const app = express();
 
 // Middlewares
@@ -30,6 +33,11 @@ app.use((req, res, next) => {    const requestLog = {
 app.post('/', (req, res) => {
     const dataHora = new Date().toISOString();
     res.json({ dataHora });
+});
+
+// Version endpoint
+app.get('/version', (req, res) => {
+    res.json({ version: versionFile.version });
 });
 
 // Export handler for Netlify Functions
