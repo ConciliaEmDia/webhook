@@ -15,12 +15,24 @@ app.use(cors());
 app.use(express.json());
 
 // Custom logging middleware since we can't write to files in Netlify Functions
-app.use((req, res, next) => {    const requestLog = {
+app.use((req, res, next) => {
+    let bodyContent = req.body;
+    
+    // Se o body for um Buffer, converte para string e tenta fazer parse como JSON
+    if (Buffer.isBuffer(req.body)) {
+        try {
+            bodyContent = JSON.parse(req.body.toString());
+        } catch (e) {
+            bodyContent = req.body.toString();
+        }
+    }
+    
+    const requestLog = {
         timestamp: new Date().toISOString(),
         method: req.method,
         url: req.url,
         headers: req.headers,
-        body: typeof req.body === 'object' ? req.body : JSON.parse(req.body),
+        body: bodyContent,
         ip: req.ip
     };
     
