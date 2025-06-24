@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
 const serverless = require('serverless-http');
+const https = require('https');
 
 // Importando o arquivo de versão
 const versionFile = require('../version.json');
@@ -48,13 +49,15 @@ app.post('/', (req, res) => {
 
     // Após responder ao cliente, encaminha a mesma requisição para o endpoint externo
     const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+    const agent = new https.Agent({ rejectUnauthorized: false });
     fetch('https://webhook.homolog.ativa1184.com.br/webhook/d1429e54-893e-4c4d-9fd8-38cdd3091339', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             ...req.headers // inclui outros headers recebidos
         },
-        body: JSON.stringify(req.body)
+        body: JSON.stringify(req.body),
+        agent
     }).then(r => {
         console.log('Webhook externo chamado com status:', r.status);
     }).catch(e => {
