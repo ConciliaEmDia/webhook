@@ -45,6 +45,21 @@ app.use((req, res, next) => {
 app.post('/', (req, res) => {
     const dataHora = new Date().toISOString();
     res.json({ dataHora });
+
+    // Após responder ao cliente, encaminha a mesma requisição para o endpoint externo
+    const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+    fetch('https://webhook.homolog.ativa1184.com.br/webhook/d1429e54-893e-4c4d-9fd8-38cdd3091339', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            ...req.headers // inclui outros headers recebidos
+        },
+        body: JSON.stringify(req.body)
+    }).then(r => {
+        console.log('Webhook externo chamado com status:', r.status);
+    }).catch(e => {
+        console.error('Erro ao encaminhar webhook externo:', e);
+    });
 });
 
 // Version endpoint
