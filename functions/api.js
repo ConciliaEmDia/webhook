@@ -55,7 +55,7 @@ app.post('/', async (req, res) => {
         };
         console.log('Headers enviados para o webhook externo:', headersEnviados);
         console.log('Body enviado:', JSON.stringify(req.body));
-        const r = await fetch('https://webhook.homolog.ativa1184.com.br/webhook/d1429e54-893e-4c4d-9fd8-38cdd3091339', {
+        const r = await fetch('https://postman-echo.com/post', {
             method: 'POST',
             headers: headersEnviados,
             body: JSON.stringify(req.body),
