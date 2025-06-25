@@ -49,22 +49,31 @@ app.post('/', async (req, res) => {
     const agent = new https.Agent({ rejectUnauthorized: false });
     try {
         console.log('Início Webhook externo.');
+        const headersEnviados = {
+            'Content-Type': 'application/json',
+            ...req.headers
+        };
+        console.log('Headers enviados para o webhook externo:', headersEnviados);
+        console.log('Body enviado:', JSON.stringify(req.body));
         const r = await fetch('https://webhook.homolog.ativa1184.com.br/webhook/d1429e54-893e-4c4d-9fd8-38cdd3091339', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                ...req.headers // inclui outros headers recebidos
-            },
+            headers: headersEnviados,
             body: JSON.stringify(req.body),
             agent
         });
         const responseText = await r.text();
         console.log('Webhook externo chamado com status:', r.status);
+        if (r.headers && (typeof r.headers.raw === 'function')) {
+            console.log('Headers recebidos do webhook externo:', r.headers.raw());
+        } else {
+            console.log('Headers recebidos do webhook externo:', r.headers);
+        }
         console.log('Resposta do webhook externo:', responseText);
         // Retorna ao cliente a resposta do webhook externo
         res.status(r.status).send(responseText);
     } catch (e) {
         console.error('Erro ao encaminhar webhook externo:', e);
+        if (e.stack) console.error(e.stack);
         res.status(500).json({ error: 'Erro ao encaminhar webhook externo', details: e.message });
     }
     console.log('Fim Webhook externo.');
