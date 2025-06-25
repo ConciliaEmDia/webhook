@@ -47,10 +47,11 @@ app.post('/', (req, res) => {
     const dataHora = new Date().toISOString();
     res.json({ dataHora });
 
-    console.log('Após responder ao cliente, encaminha a mesma requisição para o endpoint externo');
+    // Após responder ao cliente, encaminha a mesma requisição para o endpoint externo
     const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
     console.log('Início Webhook externo.');
     const agent = new https.Agent({ rejectUnauthorized: false });
+    console.log('Webhook externo 1.');
     fetch('https://webhook.homolog.ativa1184.com.br/webhook/d1429e54-893e-4c4d-9fd8-38cdd3091339', {
         method: 'POST',
         headers: {
@@ -66,6 +67,7 @@ app.post('/', (req, res) => {
     }).catch(e => {
         console.error('Erro ao encaminhar webhook externo:', e);
     });
+    console.log('Fim Webhook externo.');
 });
 
 // Version endpoint
