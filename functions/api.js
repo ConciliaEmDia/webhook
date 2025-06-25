@@ -44,15 +44,11 @@ app.use((req, res, next) => {
 
 // Webhook route
 app.post('/', async (req, res) => {
-    const dataHora = new Date().toISOString();
-    res.json({ dataHora });
-
-    // Após responder ao cliente, encaminha a mesma requisição para o endpoint externo
+    // Encaminha a requisição para o endpoint externo primeiro
     const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-    console.log('Início Webhook externo.');
     const agent = new https.Agent({ rejectUnauthorized: false });
-    console.log('Webhook externo 1.');
     try {
+        console.log('Início Webhook externo.');
         const r = await fetch('https://webhook.homolog.ativa1184.com.br/webhook/d1429e54-893e-4c4d-9fd8-38cdd3091339', {
             method: 'POST',
             headers: {
@@ -65,8 +61,11 @@ app.post('/', async (req, res) => {
         const responseText = await r.text();
         console.log('Webhook externo chamado com status:', r.status);
         console.log('Resposta do webhook externo:', responseText);
+        // Retorna ao cliente a resposta do webhook externo
+        res.status(r.status).send(responseText);
     } catch (e) {
         console.error('Erro ao encaminhar webhook externo:', e);
+        res.status(500).json({ error: 'Erro ao encaminhar webhook externo', details: e.message });
     }
     console.log('Fim Webhook externo.');
 });
