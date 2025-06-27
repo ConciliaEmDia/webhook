@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  webhook-proxy:
+    image: webhook-proxy:latest
+    ports:
+      - "2999:2999"
+    deploy:
+      restart_policy:
+        condition: any
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.webhook2999.rule=Host(`webhook.api.ativa1184.com.br`)"
+      - "traefik.http.routers.webhook2999.entrypoints=websecure"
+      - "traefik.http.routers.webhook2999.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.webhook2999.loadbalancer.server.port=2999"
